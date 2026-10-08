@@ -16,6 +16,7 @@
   --accent:#5aa2ff; --accent-fg:#0b1020; --accent-weak:#1c2c52; color-scheme:dark;
 }
 *{box-sizing:border-box}
+[hidden]{display:none !important}
 body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.55;margin:0;font-variant-numeric:tabular-nums}
 .wrap{max-width:760px;margin-inline:auto;padding:0 16px 56px}
 button,input,select{font:inherit;color:inherit}
