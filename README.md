@@ -6,7 +6,15 @@
 - 保存とリアルタイム同期：Firebase Firestore ＋ 匿名ログイン
 - Firebase の設定がないときは「確認用モード」で動く（このブラウザだけに保存。他の人には共有されない）
 
-## 最初に一度だけやること
+## 現在の状態（2026-10-08 設定済み）
+
+- Firebase プロジェクト：`parts-print-list`（Firestore：東京 `asia-northeast1`、匿名ログイン：有効、ルール：反映済み）
+- 公開URL：https://shikishima210.github.io/parts-print-list/
+- GitHub の Variables に Firebase の設定値を登録済み
+
+ルールや認証の設定を変えたら、`npx firebase-tools deploy --only firestore:rules,auth` で反映する（`firebase.json`・`.firebaserc` 参照）。
+
+## 最初に一度だけやること（作り直す場合）
 
 ### 1. Firebase プロジェクトを作る（Googleアカウント）
 
