@@ -1,0 +1,122 @@
+/* 優先順位：①量産した数の合計（上部に固定）②パーツごとの色別の数（担当者ごと）③自分の分に絞る ④3Dプロト ⑤詳細・ルール */
+:root{
+  --bg:#ffffff; --panel:#f4f6fb; --fg:#1b1f3b; --muted:#5b6179; --line:#dde1ee;
+  --accent:#0066e6; --accent-fg:#ffffff; --accent-weak:#e3eeff;
+  --font:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
+  --c-y:#ffd43b; --c-g:#22c07a; --c-r:#ff4b4b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12152a; --panel:#1b1f3b; --fg:#eef0fa; --muted:#a3a9c6; --line:#2d3354;
+    --accent:#5aa2ff; --accent-fg:#0b1020; --accent-weak:#1c2c52; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12152a; --panel:#1b1f3b; --fg:#eef0fa; --muted:#a3a9c6; --line:#2d3354;
+  --accent:#5aa2ff; --accent-fg:#0b1020; --accent-weak:#1c2c52; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.55;margin:0;font-variant-numeric:tabular-nums}
+.wrap{max-width:760px;margin-inline:auto;padding:0 16px 56px}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ① 合計（上部に固定） */
+.head{max-width:760px;margin-inline:auto;padding:16px 16px 0}
+h1{font-size:20px;font-weight:900;margin:0}
+.sub{font-size:13px;color:var(--muted);margin:2px 0 0}
+.sum{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:2px solid var(--fg);padding:8px 16px}
+.sum-in{max-width:728px;margin-inline:auto}
+.tally{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 16px;align-items:end}
+.bar{height:6px;background:var(--line);border-radius:3px;margin:6px 0 4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+.tally .all{padding-right:16px;border-right:1.5px solid var(--line)}
+.tally .lab{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.tally .v{font-size:28px;font-weight:900;line-height:1.1}
+.tally .all .v{font-size:36px}
+.tally .v small{font-size:13px;font-weight:700;margin-left:2px;color:var(--muted)}
+.due{font-size:12px;color:var(--muted);white-space:nowrap}
+.due b{color:var(--accent);font-weight:900}
+.dot{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--fg);flex:none;display:inline-block}
+.proto-line{font-size:13px;color:var(--muted);margin:10px 0 0}
+.proto-line b{color:var(--fg)}
+
+/* 切り替えと絞り込み */
+.tabs{display:flex;gap:0;margin-top:16px;border-bottom:1.5px solid var(--line)}
+.tab{border:0;background:none;padding:10px 14px;font-size:15px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1.5px}
+.tab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--fg)}
+.tab span{font-size:12px;font-weight:500;margin-left:4px}
+.who{display:flex;gap:6px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none}
+.who::-webkit-scrollbar{display:none}
+.who-l{font-size:12px;color:var(--muted);align-self:center;white-space:nowrap;margin-right:2px}
+.chip{border:1.5px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 14px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.hint{font-size:12px;color:var(--muted);margin:2px 0 0}
+
+/* ② 担当者ごとのまとまり */
+.list{margin-top:8px}
+.grp{display:flex;justify-content:space-between;align-items:baseline;padding:18px 0 6px;border-bottom:1.5px solid var(--fg)}
+.grp b{font-size:17px;font-weight:900}
+.grp span{font-size:13px;color:var(--muted)}
+.grp span b{font-size:13px;color:var(--fg);font-weight:700}
+.part{border-bottom:1px solid var(--line);padding:10px 0}
+.part-h{display:flex;align-items:baseline;gap:8px;min-width:0}
+.part-h .nm{font-size:16px;font-weight:700}
+.part-h .meta{font-size:12.5px;color:var(--muted);flex:1;min-width:0}
+.warn{font-size:12px;color:var(--accent);font-weight:700}
+.more{border:0;background:none;color:var(--accent);font-size:13px;font-weight:700;cursor:pointer;padding:4px 2px;white-space:nowrap}
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+.col{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;min-height:48px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;user-select:none;background:var(--bg)}
+.col input{position:absolute;inset:0;opacity:0;margin:0;width:100%;height:100%;cursor:pointer}
+.col .box{width:18px;height:18px;border:2px solid currentColor;border-radius:4px;display:grid;place-items:center;font-size:13px;line-height:1}
+.col.on{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.col.on .box::after{content:"✓"}
+.col.dis{opacity:.6;cursor:default}
+.col:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.part.done .nm::after{content:"　3色済";font-size:12px;color:var(--accent);font-weight:700}
+.save{font-size:12px;color:var(--muted);min-height:0;margin-top:4px}
+.save:empty{display:none}
+.save.err{color:var(--accent);font-weight:700}
+
+/* ④ 3Dプロト */
+.prow{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:8px 0;min-height:60px}
+.prow .part-h{flex:1;flex-wrap:wrap}
+.share{position:relative;display:flex;align-items:center;gap:6px;border:1.5px solid var(--fg);border-radius:10px;padding:0 14px;min-height:44px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.share input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;width:100%;height:100%}
+.share .box{width:18px;height:18px;border:2px solid currentColor;border-radius:4px;display:grid;place-items:center;font-size:13px;line-height:1}
+.share.on{background:var(--fg);color:var(--bg)}
+.share.on .box::after{content:"✓"}
+.moved{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;background:var(--accent-weak);color:var(--fg);border-radius:8px;padding:8px 12px;margin-top:10px;font-size:13.5px}
+.undo{border:1.5px solid var(--accent);background:var(--bg);color:var(--accent);border-radius:8px;padding:4px 12px;font-weight:700;cursor:pointer;justify-self:start}
+.share:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ⑤ 詳細 */
+.edit{background:var(--panel);border-radius:10px;padding:12px;margin-top:10px;display:grid;gap:12px}
+.edit-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.edit-row.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+label.f{display:grid;gap:3px;font-size:12px;color:var(--muted);font-weight:700;min-width:0}
+label.f select{border:1.5px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--bg);font-size:15px;min-width:0;width:100%}
+label.f input{border:1.5px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--bg);font-size:15px;min-width:0;width:100%}
+label.ck{display:flex;align-items:center;gap:8px;font-size:14px}
+label.ck input{width:20px;height:20px;accent-color:var(--accent);flex:none}
+
+.empty{padding:28px 0;text-align:center;color:var(--muted)}
+.foot{margin-top:28px;display:grid;gap:10px}
+details.box{border:1.5px solid var(--line);border-radius:10px;padding:0 14px}
+details.box>summary{cursor:pointer;font-weight:700;font-size:14px;padding:12px 0}
+details.box ul{margin:0 0 12px;padding-left:1.2em;font-size:13.5px;display:grid;gap:3px}
+.add{display:grid;gap:10px;padding-bottom:14px}
+.add .edit-row select{border:1.5px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--bg);font-size:15px;min-width:0}
+.btn{border:1.5px solid var(--fg);background:var(--fg);color:var(--bg);border-radius:8px;padding:8px 18px;font-weight:700;cursor:pointer;justify-self:start}
+.note{font-size:12.5px;color:var(--muted)}
+.alert{background:var(--accent-weak);color:var(--accent);padding:8px 12px;border-radius:8px;font-size:13px;font-weight:700;margin-top:12px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (max-width:420px){
+  .tally{gap:0 8px}
+  .tally .all{padding-right:8px}
+  .tally .v{font-size:22px}
+  .tally .all .v{font-size:28px}
+  .cols{gap:6px}
+}

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1b1f3b">
+<title>パーツ印刷リスト｜稲友祭 デコラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap">
+</head>
+<body>
+
+<header class="head">
+  <h1>パーツ印刷リスト</h1>
+  <p class="sub">稲友祭 デコラボ｜パーツ班　量産が終わった色にチェックしてください。</p>
+</header>
+<div class="sum" role="region" aria-label="量産した数の合計">
+  <div class="sum-in">
+    <div class="tally" id="tally">
+      <div class="all"><div class="lab">3色そろった種類</div><div class="v"><span id="t-done">0</span><small> / <span id="t-mass">0</span></small></div><div class="due" id="due"></div></div>
+      <div class="cs"><div class="lab">印刷した色</div><div class="v"><span id="t-cols">0</span><small> / <span id="t-colsAll">0</span></small></div><div class="bar"><i id="t-bar"></i></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="err" class="alert" role="alert" hidden></div>
+  <div id="offline" class="alert" role="status" hidden>オフラインです。このページを開いたままにしておけば、通信が戻ったときにチェックが自動で送られます。</div>
+  <div id="local" class="alert" hidden>確認用モードです（Firebaseの設定がありません）。ここでの記入はこのブラウザにだけ保存され、他の人には共有されません。</div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-mass" aria-selected="true" data-k="量産OK">量産<span id="n-mass"></span></button>
+    <button class="tab" role="tab" id="tab-proto" aria-selected="false" data-k="3Dプロト">3Dプロト<span id="n-proto"></span></button>
+  </div>
+  <div class="who" id="who" role="group" aria-label="担当者で絞り込む"></div>
+  <p class="hint" id="hint"></p>
+  <p class="proto-line" id="proto-line" hidden></p>
+  <div class="moved" id="moved" role="status" hidden></div>
+
+  <div id="list" class="list"><div class="empty">読み込み中…</div></div>
+  <div id="live" class="sr" aria-live="polite"></div>
+
+  <div class="foot">
+    <details class="box">
+      <summary>印刷のルール（10/7 河合さんの連絡）</summary>
+      <ul>
+        <li>量産は「量産OK」のパーツだけ</li>
+        <li>1種類につき3色を量産する（色は問わない）。1プレートに3色を並べて作る</li>
+        <li>ハートと星は担当が重なっているので、作る量を少なめに</li>
+        <li>両面テープは、できたものから貼る。小さいパーツは、テープを切って貼る</li>
+        <li>パーツのサイズ（縦・横・高さ）を書く</li>
+        <li>作った個数・パーツ名・色を、パーツ班LINEにも報告する</li>
+        <li>3Dプロトは10/9（金）までに作って、LINEのアルバムに入れる。確認OKが出たら、このリストでチェックする（量産に移る）</li>
+      </ul>
+    </details>
+    <details class="box" id="addbox">
+      <summary>パーツを追加する</summary>
+      <div class="add">
+        <div class="edit-row">
+          <label class="f" for="a-owner">担当<select id="a-owner"></select></label>
+          <label class="f" for="a-name">パーツ名<input id="a-name" type="text" placeholder="例：リボン"></label>
+          <label class="f" for="a-kind">区分<select id="a-kind"><option>量産OK</option><option>3Dプロト</option></select></label>
+        </div>
+        <button class="btn" id="a-go" type="button">追加する</button>
+        <span class="note" id="a-msg" role="status"></span>
+      </div>
+    </details>
+    <p class="note">1色目・2色目・3色目は、量産が終わった順にチェックします（何色かは問いません）。3つそろうとそのパーツは完了です。サイズ・両面テープ・LINE報告・メモは「詳細」から。</p>
+  </div>
+</div>
+
+<script type="module" src="./src/main.ts"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // パーツ班の進捗管理用。匿名ログイン済みなら読み書きできる。削除は画面から不可（管理者がコンソールで行う）
+    match /parts/{id} {
+      allow read: if request.auth != null;
+      allow create, update: if request.auth != null && valid(request.resource.data);
+      allow delete: if false;
+    }
+    // それ以外は全部拒否
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function valid(d) {
+      return d.keys().hasAll(['owner', 'name', 'kind', 'order'])
+        && d.owner is string && d.owner.size() > 0 && d.owner.size() <= 20
+        && d.name is string && d.name.size() > 0 && d.name.size() <= 40
+        && d.kind in ['量産OK', '3Dプロト']
+        && d.order is number
+        && (!('note' in d) || (d.note is string && d.note.size() <= 500))
+        && (!('c1' in d) || d.c1 is bool)
+        && (!('c2' in d) || d.c2 is bool)
+        && (!('c3' in d) || d.c3 is bool)
+        && (!('fromProto' in d) || d.fromProto is bool)
+        && d.size() <= 20;
+    }
+  }
+}
